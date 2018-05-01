@@ -18,8 +18,8 @@ import org.junit.Test;
 If tests are run in the same database depending on which order are run will fail both, to show the unexpected behaviour of parametrized inner queries
 inside a with statement comparing the same query for both methods separate databases are employed
  - If preparedStatement is called before createStatement with troubling query neither work
- - If createStatement is run before preparedStatement with troubling query only simple statement works
- - If ran on different connection, sessions, transactions preparedStatement always fails
+ - If createStatement is run before preparedStatement with troubling query both work
+ - If ran on different connection, sessions, transactions if preparedStatement is run first both always fail
  */
 public class H2RecursiveWithBug
 {
@@ -42,8 +42,8 @@ public class H2RecursiveWithBug
             + "UNION ALL "
             + "SELECT h.id FROM dummy d INNER JOIN HIERARCHY h on d.id=h.parentid"
             + "), "
-            + "dummy2(cid) AS ("
-            + "SELECT h.id from dummy d INNER JOIN SIMPLETABLE h on d.id=h.id"
+            + "dummy2(cid) AS (" // If no second view is employed, even if not employed in main query, prepared statement works correctly
+            + "SELECT h.id from dummy d INNER JOIN SIMPLETABLE h on d.id=h.id"  // previous view needs to be queried inside
             + ") "
             + "SELECT "
             + "s.id "
