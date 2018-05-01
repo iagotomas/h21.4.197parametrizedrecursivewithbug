@@ -38,12 +38,12 @@ public class H2RecursiveWithBug
 
     static final String sql =
         "WITH dummy(id) AS ("
-            + "SELECT id hierarchyId FROM HIERARCHY WHERE id=? " // Issue with parametrized inner query
+            + "SELECT id FROM HIERARCHY WHERE id=? " // Issue with parametrized inner query
             + "UNION ALL "
-            + "SELECT h.id hierarchyId FROM dummy d INNER JOIN HIERARCHY h on d.id=h.parentid"
+            + "SELECT h.id FROM dummy d INNER JOIN HIERARCHY h on d.id=h.parentid"
             + "), "
             + "dummy2(cid) AS ("
-            + "SELECT distinct h.id elementId from dummy d INNER JOIN SIMPLETABLE h on d.id=h.id"
+            + "SELECT h.id from dummy d INNER JOIN SIMPLETABLE h on d.id=h.id"
             + ") "
             + "SELECT "
             + "s.id "
